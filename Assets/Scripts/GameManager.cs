@@ -1,19 +1,40 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public Ghost[] ghosts;
-    public Pacman pacman;
-    public Transform pellets;
-
+    public Canvas canvas;
     public Text gameOverText;
     public Text scoreText;
     public Text livesText;
 
-    public int ghostMultiplier { get; private set; } = 1;
-    public int score { get; private set; }
+    private Ghost[] ghosts;
+    private Pellet[] pellets;
+    private Pacman pacman;
+
+    public int level { get; private set; }
     public int lives { get; private set; }
+    public int score { get; private set; }
+    public int ghostMultiplier { get; private set; } = 1;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(canvas.gameObject);
+
+        SceneManager.sceneLoaded += OnLevelLoaded;
+    }
+
+    private void OnLevelLoaded(Scene scene, LoadSceneMode mode)
+    {
+        ghosts = FindObjectsOfType<Ghost>();
+        pellets = FindObjectsOfType<Pellet>();
+        pacman = FindObjectOfType<Pacman>();
+
+        canvas.worldCamera = Camera.main;
+        gameOverText.enabled = false;
+    }
 
     private void Start()
     {
@@ -31,18 +52,18 @@ public class GameManager : MonoBehaviour
     {
         SetScore(0);
         SetLives(3);
-        NewRound();
+        LoadLevel(1);
     }
 
-    private void NewRound()
+    private void LoadLevel(int level)
     {
-        gameOverText.enabled = false;
+        this.level = level;
+        SceneManager.LoadScene("Level" + level.ToString());
+    }
 
-        foreach (Transform pellet in pellets) {
-            pellet.gameObject.SetActive(true);
-        }
-
-        ResetState();
+    private void LoadNextLevel()
+    {
+        LoadLevel(level + 1);
     }
 
     private void ResetState()
@@ -107,7 +128,7 @@ public class GameManager : MonoBehaviour
         if (!HasRemainingPellets())
         {
             pacman.gameObject.SetActive(false);
-            Invoke(nameof(NewRound), 3f);
+            Invoke(nameof(LoadNextLevel), 3f);
         }
     }
 
@@ -124,7 +145,7 @@ public class GameManager : MonoBehaviour
 
     private bool HasRemainingPellets()
     {
-        foreach (Transform pellet in pellets)
+        foreach (Pellet pellet in pellets)
         {
             if (pellet.gameObject.activeSelf) {
                 return true;
