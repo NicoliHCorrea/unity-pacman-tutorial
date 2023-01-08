@@ -2,10 +2,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
-{
+{   
+    public AudioSource BGsound;
+    public AudioSource PelletSound;
+    public AudioSource DeathSound;
+    public AudioSource GhostEatenSound;
+
+    public AudioClip[] clips;
     public Ghost[] ghosts;
     public Pacman pacman;
     public Transform pellets;
+
+    public bool playWaka1 = true;
+    public bool superPellet = false;
 
     public Text gameOverText;
     public Text scoreText;
@@ -52,6 +61,8 @@ public class GameManager : MonoBehaviour
         }
 
         pacman.ResetState();
+        BGsound.Play();
+
     }
 
     private void GameOver()
@@ -80,7 +91,8 @@ public class GameManager : MonoBehaviour
     public void PacmanEaten()
     {
         pacman.DeathSequence();
-
+        BGsound.Stop();
+        DeathSound.Play();
         SetLives(lives - 1);
 
         if (lives > 0) {
@@ -92,6 +104,7 @@ public class GameManager : MonoBehaviour
 
     public void GhostEaten(Ghost ghost)
     {
+        GhostEatenSound.Play();
         int points = ghost.points * ghostMultiplier;
         SetScore(score + points);
 
@@ -99,8 +112,18 @@ public class GameManager : MonoBehaviour
     }
 
     public void PelletEaten(Pellet pellet)
-    {
+    {   
         pellet.gameObject.SetActive(false);
+
+        if (playWaka1 == true){
+            PelletSound.clip = clips[0];
+            playWaka1 = false;
+        }
+        else{
+            PelletSound.clip = clips[1];
+            playWaka1 = true;
+        } 
+        PelletSound.Play();
 
         SetScore(score + pellet.points);
 
@@ -116,11 +139,22 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < ghosts.Length; i++) {
             ghosts[i].frightened.Enable(pellet.duration);
         }
-
+        superPellet = true;
         PelletEaten(pellet);
+        BGsound.clip = clips[2];
+        BGsound.Play();
         CancelInvoke(nameof(ResetGhostMultiplier));
         Invoke(nameof(ResetGhostMultiplier), pellet.duration);
+        CancelInvoke(nameof(ResetBG));
+        Invoke(nameof(ResetBG), pellet.duration);
+        
     }
+
+    private void ResetBG(){
+        BGsound.clip = clips[3];
+        BGsound.Play();
+    }
+
 
     private bool HasRemainingPellets()
     {
