@@ -1,8 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading;
+using System.Threading.Tasks;
+
+
 
 public class GameManager : MonoBehaviour
 {   
+    private CancellationTokenSource powerPelletSoundCts;
+
+    public BGSound scriptSound;
     public AudioSource BGsound;
     public AudioSource PelletSound;
     public AudioSource DeathSound;
@@ -134,26 +141,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void PowerPelletEaten(PowerPellet pellet)
-    {
-        for (int i = 0; i < ghosts.Length; i++) {
-            ghosts[i].frightened.Enable(pellet.duration);
-        }
-        superPellet = true;
-        PelletEaten(pellet);
-        BGsound.clip = clips[2];
-        BGsound.Play();
-        CancelInvoke(nameof(ResetGhostMultiplier));
-        Invoke(nameof(ResetGhostMultiplier), pellet.duration);
-        CancelInvoke(nameof(ResetBG));
-        Invoke(nameof(ResetBG), pellet.duration);
-        
+    public async void PowerPelletEaten(PowerPellet pellet)
+{
+    for (int i = 0; i < ghosts.Length; i++) {
+        ghosts[i].frightened.Enable(pellet.duration);
     }
 
-    private void ResetBG(){
-        BGsound.clip = clips[3];
-        BGsound.Play();
-    }
+    superPellet = true;
+    PelletEaten(pellet);
+    
+    BGsound.clip = clips[2];
+    BGsound.Play();
+    
+    CancelInvoke(nameof(ResetGhostMultiplier));
+    Invoke(nameof(ResetGhostMultiplier), pellet.duration);
+    
+    powerPelletSoundCts?.Cancel();
+    powerPelletSoundCts = new CancellationTokenSource();
+    scriptSound.PelletReset(pellet.duration, powerPelletSoundCts.Token);
+}
 
 
     private bool HasRemainingPellets()
