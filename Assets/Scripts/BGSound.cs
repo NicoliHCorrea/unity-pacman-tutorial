@@ -18,7 +18,6 @@ public class BGSound : MonoBehaviour
 
     public void ResetBG()
     {   
-        Debug.Log("Aqui");
         if (scriptable.getMusic() == "Normal"){
             bgs.clip = clips[0];
         }
@@ -32,8 +31,10 @@ public class BGSound : MonoBehaviour
     public async void PelletReset(float delay, CancellationToken ct)
 {   
     int delayi = (int)delay;
-    await Task.Delay(delayi * 1000, ct); // o tempo aqui é em milisegundos
-    if(ct.IsCancellationRequested) return;
+    try{
+        await Task.Delay(delayi * 1000, ct); // o tempo aqui é em milisegundos
+    }
+    catch{return;}
 
     ResetBG();
 }
