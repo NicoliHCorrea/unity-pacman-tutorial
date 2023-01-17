@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     private CancellationTokenSource powerPelletSoundCts;
 
     public BGSound scriptSound;
-    public LogFile scriptLog;
 
     public AudioSource BGsound;
     public AudioSource PelletSound;
@@ -83,7 +82,9 @@ public class GameManager : MonoBehaviour
         }
 
         pacman.gameObject.SetActive(false);
-        scriptLog.endGame();
+        LogFile.instance.allText.Add("Número de inputs: " + pacman.inputs.ToString());
+        LogFile.instance.allText.Add("Pontuação alcançada: "+score.ToString());
+        LogFile.instance.endGame();
     }
 
     private void SetLives(int lives)
@@ -142,7 +143,7 @@ public class GameManager : MonoBehaviour
             pacman.gameObject.SetActive(false);
             Invoke(nameof(NewRound), 3f);
         }
-        scriptLog.allText.Add(score.ToString());
+        
     }
 
     public async void PowerPelletEaten(PowerPellet pellet)

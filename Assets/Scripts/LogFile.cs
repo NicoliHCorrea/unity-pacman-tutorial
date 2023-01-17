@@ -9,28 +9,40 @@ public class LogFile : MonoBehaviour
 {   
     [SerializeField] public MusicName scriptable; 
     public List<string> allText = new List<string>();    
+    public static LogFile instance;
+    public DateTime LocalDate;
 
-    void Start()
+    private void Awake()
     {
-
+        if (instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public void GameStart()
-    {   
+    {
         DateTime localDate = DateTime.Now;
         string message = localDate.ToString("dd/MM/yyyy HH:mm:ss");
         allText.Add(message);
-        message = "Música selecionada: "+ scriptable.getMusic();
+        message = "Música selecionada: " + scriptable.getMusic();
         allText.Add(message);
         
     }
 
     public void endGame(){
+        DateTime newTime = DateTime.Now;
+        allText.Add("Duração da partida: " + newTime.Subtract(LocalDate).Seconds + "s");
         WriteToLogFile();
     }
 
     public void WriteToLogFile (){
-        using (StreamWriter writer = new StreamWriter(@"C:\Users\nicol\Documents\GitHub\unity-pacman-tutorial\LogFile.txt")){
+        using (StreamWriter writer = new StreamWriter(@"D:\unity-pacman-tutorial2\LogFile.txt")){
             foreach (string item in allText)
             {
                 writer.WriteLine(item);

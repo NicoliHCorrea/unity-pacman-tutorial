@@ -7,6 +7,7 @@ public class Pacman : MonoBehaviour
     public SpriteRenderer spriteRenderer { get; private set; }
     public new Collider2D collider { get; private set; }
     public Movement movement { get; private set; }
+    public int inputs = 0;
 
     private void Awake()
     {
@@ -19,15 +20,19 @@ public class Pacman : MonoBehaviour
     {
         // Set the new direction based on the current input
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
+            inputs += 1;
             movement.SetDirection(Vector2.up);
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
+            inputs += 1;
             movement.SetDirection(Vector2.down);
         }
         else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
+            inputs += 1;
             movement.SetDirection(Vector2.left);
         }
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
+            inputs += 1;
             movement.SetDirection(Vector2.right);
         }
 
