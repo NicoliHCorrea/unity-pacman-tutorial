@@ -12,6 +12,9 @@ public class LogFile : MonoBehaviour
     public static LogFile instance;
     public DateTime LocalDate;
 
+    private string path_note = @"C:\Users\nicol\Documents\GitHub\unity-pacman-tutorial\LogFile.txt";
+    private string path_pc = @"D:\unity-pacman-tutorial2\LogFile.txt";
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -42,7 +45,7 @@ public class LogFile : MonoBehaviour
     }
 
     public void WriteToLogFile (){
-        using (StreamWriter writer = new StreamWriter(@"D:\unity-pacman-tutorial2\LogFile.txt")){
+        using (StreamWriter writer = new StreamWriter(path_note)){
             foreach (string item in allText)
             {
                 writer.WriteLine(item);

@@ -1,5 +1,3 @@
-17/01/2023 13:19:00
-Música selecionada: Normal
-Número de inputs: 18
-Pontuação alcançada: 110
-Duração da partida: 15
+Número de inputs: 24
+Pontuação alcançada: 400
+Duração da partida: 49s
