@@ -20,29 +20,15 @@ public class SampleUserPolling_ReadWrite : MonoBehaviour
     // Initialization
     void Start()
     {
-        serialController = GameObject.Find("SerialController").GetComponent<SerialController>();
+        serialController = GameObject.Find("SerialController").GetComponent<SerialController>(); 
+        InvokeRepeating(nameof(getBPM), 0f, 0.25f);
 
     }
 
-    // Executed each frame
-    void Update()
+
+    string getBPM()
     {
-
         string message = serialController.ReadSerialMessage();
-
-        if (message == null)
-            return;
-
-        // Check if the message is plain data or a connect/disconnect event.
-        if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_CONNECTED))
-            Debug.Log("Connection established");
-        else if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_DISCONNECTED))
-            Debug.Log("Connection attempt failed or disconnection detected");
-        else
-            Debug.Log("Message arrived: " + message);
-        if (message == "1")
-        {
-            count += 1;
-        }
+        return message;
     }
 }

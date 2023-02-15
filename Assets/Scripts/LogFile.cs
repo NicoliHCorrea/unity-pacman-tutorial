@@ -8,7 +8,8 @@ using System.IO;
 public class LogFile : MonoBehaviour
 {   
     [SerializeField] public MusicName scriptable; 
-    public List<string> allText = new List<string>();    
+    public List<string> allText = new List<string>();
+    public List<string> heartBeats = new List<string>();
     public static LogFile instance;
     public DateTime LocalDate;
 
@@ -47,6 +48,10 @@ public class LogFile : MonoBehaviour
     public void WriteToLogFile (){
         using (StreamWriter writer = new StreamWriter(path_note)){
             foreach (string item in allText)
+            {
+                writer.WriteLine(item);
+            }
+            foreach(string item in heartBeats)
             {
                 writer.WriteLine(item);
             }
