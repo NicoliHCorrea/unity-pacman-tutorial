@@ -29,6 +29,7 @@ public class SampleUserPolling_ReadWrite : MonoBehaviour
     string getBPM()
     {
         string message = serialController.ReadSerialMessage();
+        Debug.Log("bpm : " + message);
         return message;
     }
 }
