@@ -19,8 +19,8 @@ public class HeartBeats : MonoBehaviour
     void getBPM()
     {
         string message = serialController.ReadSerialMessage();
-        DateTime d = System.DateTime.Now;
-        LogFile.instance.heartBeats.Add(d + "BPM: " + message);
+        TimeSpan currentTime = DateTime.Now.TimeOfDay;
+        LogFile.instance.heartBeats.Add(currentTime + " BPM: " + message);
 
     }
 }

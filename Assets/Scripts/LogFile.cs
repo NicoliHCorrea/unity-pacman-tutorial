@@ -46,7 +46,7 @@ public class LogFile : MonoBehaviour
     }
 
     public void WriteToLogFile (){
-        using (StreamWriter writer = new StreamWriter(path_note)){
+        using (StreamWriter writer = new StreamWriter(path_pc)){
             foreach (string item in allText)
             {
                 writer.WriteLine(item);
